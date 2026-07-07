@@ -3,6 +3,8 @@
 
 #include "UALInteractionComponent.h"
 
+#include "IALInteractable.h"
+
 
 // Sets default values for this component's properties
 UALInteractionComponent::UALInteractionComponent()
@@ -31,5 +33,23 @@ void UALInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UALInteractionComponent::SetFocusActor(AActor* NewFocusActor)
+{
+	if (FocusActor.Get() == NewFocusActor) return;
+	auto OldFocusActor = FocusActor.Get();
+	
+	if (OldFocusActor != nullptr && OldFocusActor->Implements<UIALInteractable>())
+	{
+		IIALInteractable::Execute_OnFocusEnd(OldFocusActor, GetOwner());
+	}
+	
+	FocusActor = NewFocusActor;
+	
+	if (FocusActor.Get() != nullptr && FocusActor->Implements<UIALInteractable>())
+	{
+		IIALInteractable::Execute_OnFocusBegin(FocusActor.Get(), GetOwner());
+	}
 }
 

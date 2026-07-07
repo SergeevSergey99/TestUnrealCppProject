@@ -11,16 +11,25 @@ UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TESTCPPPROJECT_API UALInteractionComponent : public UActorComponent
 {
 	GENERATED_BODY()
+	
+	UPROPERTY(EditDefaultsOnly, Category="Interaction")
+	float InteractionDistance = 350.f;
+	
+	TWeakObjectPtr<AActor> FocusActor;
 
 public:
 	// Sets default values for this component's properties
 	UALInteractionComponent();
 
+	void TryInteract();
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
+private:
+	void UpdateFocus();
+	AActor* FindInteractableActor() const;
+	void SetFocusActor(AActor* NewFocusActor);
 };
