@@ -6,22 +6,9 @@
 // Sets default values
 AALInteractableActor::AALInteractableActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
+	SetRootComponent(SceneRoot);
 
+	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+	MeshComponent->SetupAttachment(SceneRoot);
 }
-
-// Called when the game starts or when spawned
-void AALInteractableActor::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void AALInteractableActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-

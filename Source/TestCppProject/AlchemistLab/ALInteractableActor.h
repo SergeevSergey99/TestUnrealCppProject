@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "IALInteractable.h"
 #include "GameFramework/Actor.h"
 #include "ALInteractableActor.generated.h"
 
 UCLASS()
-class TESTCPPPROJECT_API AALInteractableActor : public AActor
+class TESTCPPPROJECT_API AALInteractableActor : public AActor, public IIALInteractable
 {
 	GENERATED_BODY()
 	
@@ -15,12 +16,15 @@ public:
 	// Sets default values for this actor's properties
 	AALInteractableActor();
 
+	virtual bool CanInteract_Implementation(AActor* Interactor) const override;
+	virtual void Interact_Implementation(AActor* Interactor) override;
+	virtual void OnFocusBegin_Implementation(AActor* Interactor) override;
+	virtual void OnFocusEnd_Implementation(AActor* Interactor) override;
+
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<USceneComponent> SceneRoot;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UStaticMeshComponent> MeshComponent;
 };
