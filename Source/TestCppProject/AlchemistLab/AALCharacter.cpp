@@ -34,7 +34,14 @@ void AAALCharacter::BeginPlay()
 void AAALCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
+	if (PhysicsHandleComponent && PhysicsHandleComponent->GrabbedComponent)
+	{
+		PhysicsHandleComponent->SetTargetLocationAndRotation(
+			CarryPoint->GetComponentLocation(), 
+			CarryPoint->GetComponentRotation()
+			);
+	}
 }
 
 // Called to bind functionality to input
@@ -42,5 +49,20 @@ void AAALCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AAALCharacter::TryCarryActor(AALCarryableActor* CarryableActor)
+{
+	if (!CarryableActor || !PhysicsHandleComponent) return;
+	
+	UPrimitiveComponent* CarryPrimitive = CarryableActor->GetCarryPrimitive();
+	if (!CarryPrimitive) return;
+	
+	PhysicsHandleComponent->GrabComponentAtLocationWithRotation(
+		CarryPrimitive, 
+		NAME_None, 
+		CarryPrimitive->GetComponentLocation(), 
+		CarryPrimitive->GetComponentRotation()
+		);
 }
 
